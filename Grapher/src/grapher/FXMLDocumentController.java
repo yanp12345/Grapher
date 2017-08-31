@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-//ASFGHGFSADFSHRGFSDF
 package grapher;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -51,7 +50,9 @@ SerialPort serialPort;
  Series<Number, Number>[] series = new Series[15];
  Hashtable<Integer, CheckBox> check
      = new Hashtable<Integer, CheckBox>();
- 
+ StringBuilder values = new StringBuilder();
+ boolean receivingMessage = true;
+ ArrayList <Number> tograph = new ArrayList();
  public void initialize(){   
      chart.setPrefWidth(width);
       chart.setPrefHeight(height);
@@ -100,31 +101,47 @@ try{
     }*/
 serialPort.addEventListener((SerialPortEvent serialPortEvent) -> {
       if(serialPortEvent.isRXCHAR() && serialPortEvent.getEventValue() > 0){
-                    try {
-                        StringBuilder values = new StringBuilder();
-                       String st = serialPort.readString();
-                       values.append(st);
-                       ArrayList<Integer> tograph = new ArrayList<Integer>();
-                        //Update label in ui thread
-                        
-                      /*while (1==1){
-                           if(values.length()>0){
-                            if(values.indexOf(",") == -1) {
-                                tograph.add(Integer.parseInt(values.toString()));
-                                break;
+          
+                    try {             
+                       byte buffer[] = serialPort.readBytes();
+                       for (byte b: buffer) {
+                if (b == '(') {
+                    receivingMessage = true;
+                    values.setLength(0);
+                    tograph.clear();
+                }
+                else if (receivingMessage == true) {
+                    if (b == ')') {
+                        receivingMessage = false;
+while(1==1){
+
+                                   if(values.indexOf(",")==-1){
+                                      tograph.add(Integer.parseInt(values.toString()));
+                                       break;
+                                    }
+                                   tograph.add(Integer.parseInt(values.substring(0 , values.indexOf(","))));
+                                   values.delete(0, values.indexOf(",")+1);
+                                   }
+                                  System.out.println(tograph);
+                         
+                        Platform.runLater(new Runnable() {
+                            @Override public void run() {
+                                  
+                                if(tograph.size()==17){
+                            for(int i=1; i<17; i++){
+                                series[i].getData().add(new XYChart.Data(tograph.get(0), tograph.get(i)));
                             }
-                            tograph.add(Integer.parseInt(values.substring(0, values.indexOf(",") - 1)));
-                            values.delete(0, values.indexOf(","));
+                                }
+                                
                            }
-                        }*/
-                        System.out.println(values);
-                           
-                        Platform.runLater(() -> {
-                           /* for(int i=0; i<15; i++){
-                                series[i].getData().add(new XYChart.Data(tograph.get(0), tograph.get(i+1)));
-                            }*/
                         });
-                        
+                    }
+                    else {
+                        values.append((char)b);
+                    }
+                }
+            }                
+
                     } catch (SerialPortException ex) {
 
                     }
@@ -132,6 +149,11 @@ serialPort.addEventListener((SerialPortEvent serialPortEvent) -> {
             });
 
 }catch(SerialPortException ex){}
+        try {
+            Thread.sleep(100);
+         } catch (Exception e) {
+            System.out.println(e);
+         }
 }
    public void zin(){
             width = width*5/4;
