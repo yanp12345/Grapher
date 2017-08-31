@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="590.0" prefWidth="878.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="grapher.FXMLDocumentController">
+    <children>
+        <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
+      <Button fx:id="start" layoutX="596.0" layoutY="14.0" mnemonicParsing="false" onAction="#graph" text="Graph" />
+      <Button layoutX="661.0" layoutY="14.0" mnemonicParsing="false" onAction="#stopgraph" text="Stop Graphing" />
+      
+      <ScrollPane layoutX="47.0" layoutY="85.0" prefHeight="454.0" prefWidth="878.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+          <LineChart fx:id="chart" layoutY="27.0" prefHeight="449.0" prefWidth="500.0">
+        <xAxis>
+          <NumberAxis autoRanging="false" label="Time (ms)" side="BOTTOM" tickLabelRotation="-56.3" fx:id="xAxis" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="yAxis" autoRanging="false" label="Analog Input" side="LEFT" />
+        </yAxis>
+      </LineChart>
+        </content>
+      </ScrollPane>
+      <Button layoutX="648.0" layoutY="557.0" mnemonicParsing="false" onAction="#save" text="Save" />
+      <Button fx:id="in" layoutX="7.0" layoutY="214.0" mnemonicParsing="false" onAction="#zin" prefHeight="25.0" prefWidth="29.0" text="+" />
+      <Button fx:id="out" layoutX="7.0" layoutY="254.0" mnemonicParsing="false" onAction="#zout" prefHeight="25.0" prefWidth="29.0" text="-" />
+      <Button layoutX="173.0" layoutY="14.0" mnemonicParsing="false" onAction="#open" text="Open Port" />
+      <Button layoutX="265.0" layoutY="14.0" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="84.0" text="Close Port" />
+      <ComboBox fx:id="com" layoutX="14.0" layoutY="14.0" onAction="#select" prefWidth="150.0" />
+      <ScrollPane layoutX="363.0" layoutY="5.0" prefHeight="69.0" prefWidth="200.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="230.0" prefWidth="200.0">
+               <children>
+                  <CheckBox layoutX="11.0" layoutY="5.0" mnemonicParsing="false" text="Input 1" fx:id = "chk1"/>
+                  <CheckBox layoutX="11.0" layoutY="30.0" mnemonicParsing="false" text="Input 2" fx:id = "chk2"/>
+                  <CheckBox layoutX="90.0" layoutY="5.0" mnemonicParsing="false" text="Input 9" fx:id = "chk3"/>
+                  <CheckBox layoutX="90.0" layoutY="30.0" mnemonicParsing="false" text="Input 10" fx:id = "chk4"/>
+                  <CheckBox layoutX="11.0" layoutY="56.0" mnemonicParsing="false" text="Input 3" fx:id = "chk5"/>
+                  <CheckBox layoutX="11.0" layoutY="82.0" mnemonicParsing="false" text="Input 4" fx:id = "chk6"/>
+                  <CheckBox layoutX="11.0" layoutY="106.0" mnemonicParsing="false" text="Input 5" fx:id = "chk7"/>
+                  <CheckBox layoutX="11.0" layoutY="131.0" mnemonicParsing="false" text="Input 6" fx:id = "chk8"/>
+                  <CheckBox layoutX="11.0" layoutY="157.0" mnemonicParsing="false" text="Input 7" fx:id = "chk9"/>
+                  <CheckBox layoutX="11.0" layoutY="181.0" mnemonicParsing="false" text="Input 8" fx:id = "chk10"/>
+                  <CheckBox layoutX="90.0" layoutY="56.0" mnemonicParsing="false" text="Input 11" fx:id = "chk11"/>
+                  <CheckBox layoutX="90.0" layoutY="82.0" mnemonicParsing="false" text="Input 12" fx:id = "chk12"/>
+                  <CheckBox layoutX="90.0" layoutY="106.0" mnemonicParsing="false" text="Input 13" fx:id = "chk13"/>
+                  <CheckBox layoutX="90.0" layoutY="131.0" mnemonicParsing="false" text="Input 14" fx:id = "chk14"/>
+                  <CheckBox layoutX="90.0" layoutY="157.0" mnemonicParsing="false" text="Input 15" fx:id = "chk15"/>
+                  <CheckBox layoutX="90.0" layoutY="181.0" mnemonicParsing="false" text="Input 16" fx:id = "chk16"/>
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+ 
+    </children>
+</AnchorPane>
