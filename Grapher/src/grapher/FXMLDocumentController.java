@@ -129,7 +129,7 @@ while(1==1){
                                   
                                 if(tograph.size()==17){
                             for(int i=1; i<17; i++){
-                                series[i].getData().add(new XYChart.Data(tograph.get(0), tograph.get(i)));
+                                series[i-1].getData().add(new XYChart.Data(tograph.get(0), tograph.get(i)));
                             }
                                 }
                                 
