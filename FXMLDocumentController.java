@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -29,6 +30,9 @@ import jssc.SerialPortException;
 import jssc.SerialPortEvent;
 import jssc.SerialPortList;
 import java.util.Hashtable;
+import java.util.stream.Stream;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 public class FXMLDocumentController {
 @FXML
  public LineChart<Number, Number> chart;
@@ -40,19 +44,24 @@ public class FXMLDocumentController {
  ComboBox com;
 @FXML
 CheckBox chk1, chk2, chk3, chk4, chk5, chk6, chk7, chk8, chk9, chk10, chk11, chk12, chk13, chk14, chk15, chk16;
-
+@FXML
+CheckBox toggle;
+@FXML
+ScrollBar bar;
 Scene scene;
 public int test = 0;
-Integer width = 1000;
-Integer height = 500;   
+Integer width = 800;
+Integer height = 500;
 String port = new String();
 SerialPort serialPort;
- Series<Number, Number>[] series = new Series[15];
+ XYChart.Series<Number, Number>[] series = Stream.<XYChart.Series<Number, Number>>generate(XYChart.Series::new).limit(16).toArray(XYChart.Series[]::new);;
+ 
  Hashtable<Integer, CheckBox> check
      = new Hashtable<Integer, CheckBox>();
  StringBuilder values = new StringBuilder();
  boolean receivingMessage = true;
- ArrayList <Number> tograph = new ArrayList();
+ ArrayList <Integer> tograph = new ArrayList();
+int maxtime = 900;
  public void initialize(){   
      chart.setPrefWidth(width);
       chart.setPrefHeight(height);
@@ -63,7 +72,7 @@ SerialPort serialPort;
         com.getItems().add(portNames[i]);
        }
         check.put(0, chk1); check.put(1, chk2); check.put(2, chk3); check.put(3, chk4); check.put(4, chk5); check.put(5, chk6); check.put(6, chk7); check.put(7, chk8); check.put(8, chk9); check.put(9, chk10); check.put(10, chk11); check.put(11, chk12); check.put(12, chk13); check.put(13, chk14); check.put(14, chk15); check.put(15, chk16);
-       
+        
 }
 public void select(){
             port = com.getValue().toString();
@@ -79,6 +88,15 @@ public void open(){
     catch (SerialPortException ex) {
         System.out.println(ex);
     }
+        try{
+        for(int i=0; i<15; i++){
+        if(check.get(i).isSelected())
+        chart.getData().add(series[i]);
+        else{
+            chart.getData().remove(series[i]);
+        }
+    }
+    }catch(NullPointerException e){}
 }
 
 public void close(){
@@ -91,17 +109,11 @@ public void close(){
 }
 
 public void graph(){ 
+
 try{
-    /*for(int i=0; i<15; i++){
-        if(check.get(i).isSelected())
-        chart.getData().add(series[i]);
-        else{
-            chart.getData().remove(series[i]);
-        }
-    }*/
+
 serialPort.addEventListener((SerialPortEvent serialPortEvent) -> {
       if(serialPortEvent.isRXCHAR() && serialPortEvent.getEventValue() > 0){
-          
                     try {             
                        byte buffer[] = serialPort.readBytes();
                        for (byte b: buffer) {
@@ -113,26 +125,41 @@ serialPort.addEventListener((SerialPortEvent serialPortEvent) -> {
                 else if (receivingMessage == true) {
                     if (b == ')') {
                         receivingMessage = false;
+                        
+                        try{
 while(1==1){
-
+                                    
                                    if(values.indexOf(",")==-1){
-                                      tograph.add(Integer.parseInt(values.toString()));
+                                      tograph.add(Integer.parseInt(values.toString().trim()));
                                        break;
                                     }
                                    tograph.add(Integer.parseInt(values.substring(0 , values.indexOf(","))));
                                    values.delete(0, values.indexOf(",")+1);
-                                   }
+                                   }}catch(NumberFormatException e){}
                                   System.out.println(tograph);
-                         
+                                
+
+                                 
                         Platform.runLater(new Runnable() {
                             @Override public void run() {
-                                  
-                                if(tograph.size()==17){
+                                try{
+                                                               if(tograph.size()==17){
+                                   
                             for(int i=1; i<17; i++){
-                                series[i-1].getData().add(new XYChart.Data(tograph.get(0), tograph.get(i)));
+                                series[i-1].getData().add(new XYChart.Data(tograph.get(0), tograph.get(i)));     
                             }
-                                }
+                               }
                                 
+                                                           if(toggle.isSelected()){
+                                                               maxtime = tograph.get(0);
+                               xAxis.setUpperBound(bar.getMax() * (maxtime)/100+100);
+                               xAxis.setLowerBound(bar.getMax() * (maxtime)/100-800);
+                           }
+                           else{
+                            xAxis.setUpperBound(bar.getValue() * (maxtime)/100+100);
+                           xAxis.setLowerBound(bar.getValue() * (maxtime)/100-800);
+                           }     
+                           }catch(IndexOutOfBoundsException e){}
                            }
                         });
                     }
@@ -168,6 +195,7 @@ height = height*4/5;
      chart.setPrefWidth(width);
       chart.setPrefHeight(height);
   }
+
     public void stopgraph(){
 
     }
@@ -183,4 +211,4 @@ public void save() {
     }
 }
   
-  
+    }
