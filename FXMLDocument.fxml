@@ -11,17 +11,16 @@
     <children>
         <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
       <Button fx:id="start" layoutX="596.0" layoutY="14.0" mnemonicParsing="false" onAction="#graph" text="Graph" />
-      <Button layoutX="661.0" layoutY="14.0" mnemonicParsing="false" onAction="#stopgraph" text="Stop Graphing" />
       
       <ScrollPane layoutX="47.0" layoutY="85.0" prefHeight="454.0" prefWidth="878.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
           <LineChart fx:id="chart" animated="false" createSymbols="false" layoutY="27.0">
         <xAxis>
-          <NumberAxis autoRanging="false" label="Time (ms)" minorTickCount="1" side="BOTTOM" tickLabelRotation="-56.3" fx:id="xAxis" />
+          <NumberAxis autoRanging="false" label="X" minorTickCount="1" side="BOTTOM" tickLabelRotation="-56.3" fx:id="xAxis" />
         </xAxis>
         <yAxis>
-          <NumberAxis fx:id="yAxis" autoRanging="false" label="Analog Input" minorTickCount="1" side="LEFT" />
+          <NumberAxis fx:id="yAxis" autoRanging="false" label="Y" minorTickCount="1" side="LEFT" />
         </yAxis>
       </LineChart>
         </content>
@@ -29,10 +28,10 @@
       <Button layoutX="648.0" layoutY="557.0" mnemonicParsing="false" onAction="#save" text="Save" />
       <Button fx:id="in" layoutX="112.0" layoutY="551.0" mnemonicParsing="false" onAction="#zin" prefHeight="25.0" prefWidth="29.0" text="+" />
       <Button fx:id="out" layoutX="75.0" layoutY="551.0" mnemonicParsing="false" onAction="#zout" prefHeight="25.0" prefWidth="29.0" text="-" />
-      <Button layoutX="173.0" layoutY="14.0" mnemonicParsing="false" onAction="#open" text="Open Port" />
-      <Button layoutX="265.0" layoutY="14.0" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="84.0" text="Close Port" />
+      <Button fx:id="open" layoutX="173.0" layoutY="14.0" mnemonicParsing="false" onAction="#open" text="Open Port" />
+      <Button fx:id="close" layoutX="265.0" layoutY="14.0" mnemonicParsing="false" onAction="#close" prefHeight="25.0" prefWidth="84.0" text="Close Port" />
       <ComboBox fx:id="com" layoutX="14.0" layoutY="14.0" onAction="#select" prefWidth="150.0" />
-      <ScrollPane fx:id="scrollpane" layoutX="363.0" layoutY="5.0"  prefHeight="69.0" prefWidth="200.0">
+      <ScrollPane fx:id="scrollpane" layoutX="363.0" layoutY="5.0" prefHeight="69.0" prefWidth="200.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="230.0" prefWidth="200.0">
                <children>
@@ -56,8 +55,10 @@
             </AnchorPane>
         </content>
       </ScrollPane>
-      <CheckBox fx:id="toggle" layoutX="171.0" layoutY="555.0" mnemonicParsing="false" text="Lock to End"/>
-      <ScrollBar layoutX="299.0" layoutY="556.0" prefHeight="17.0" prefWidth="301.0" fx:id="bar" />
+      <CheckBox fx:id="toggle" layoutX="171.0" layoutY="555.0" mnemonicParsing="false" text="Lock to End" />
+      <ScrollBar fx:id="bar" layoutX="299.0" layoutY="556.0" prefHeight="17.0" prefWidth="301.0"/>
+      <ScrollBar fx:id="vert" layoutX="14.0" layoutY="272.0" orientation="VERTICAL" prefHeight="301.0" prefWidth="17.0" />
  
     </children>
 </AnchorPane>
+
