@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package grapher;
 import java.io.File;
 import java.io.FileWriter;
@@ -21,6 +26,7 @@ import jssc.SerialPortEvent;
 import jssc.SerialPortList;
 import java.util.Hashtable;
 import java.util.stream.Stream;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollBar;
 public class FXMLDocumentController {
 @FXML
@@ -37,7 +43,13 @@ CheckBox chk1, chk2, chk3, chk4, chk5, chk6, chk7, chk8, chk9, chk10, chk11, chk
 CheckBox toggle;
 @FXML
 ScrollBar bar;
+@FXML
+ScrollBar vert;
 Scene scene;
+@FXML
+Button open;
+@FXML
+Button close;
 public int test = 0;
 Integer width = 800;
 Integer height = 500;
@@ -50,13 +62,14 @@ SerialPort serialPort;
  StringBuilder bs = new StringBuilder();
  boolean receivingMessage = true;
  ArrayList <Double> tograph = new ArrayList(); //CHANGE TO DOUBLE
-double maxtime = 900;
+double maxx = 900;
+double maxy = 1000;
 File graph = new File("graph.txt");
  public void initialize(){   
  	chart.setPrefWidth(width);
   	chart.setPrefHeight(height);
   	xAxis.setUpperBound(900);
-  	yAxis.setUpperBound(1050);
+  	yAxis.setUpperBound(1000);
    	String[] portNames = SerialPortList.getPortNames();
    	for(int i=0; i<portNames.length; i++){
     	com.getItems().add(portNames[i]);
@@ -70,7 +83,8 @@ public void select(){
 }
 
 public void open(){
-
+        open.setDisable(true);
+        close.setDisable(false);
 	try {
     	serialPort.openPort();//Open serial port
     	serialPort.setParams(9600, 8, 1, 0);//Set params.
@@ -90,7 +104,9 @@ public void open(){
 }
 
 public void close(){
-	try {
+        open.setDisable(false);
+        close.setDisable(true);
+    try {
     	serialPort.closePort();//Close serial port
 	}
 	catch (SerialPortException ex) {
@@ -131,21 +147,29 @@ while(1==1){
                                     System.out.println(tograph);
                                 try{
                                                                if(tograph.size()==17){
-                                                               bs.append(tograph);
+                                                               bs.append(tograph + System.getProperty("line.separator"));//DEBUGGING NEEDED
                         	for(int i=1; i<17; i++){
                                 series[i-1].getData().add(new XYChart.Data(tograph.get(0), tograph.get(i)));     
-                        	}
-                           	}
-                                
-                                                       	if(toggle.isSelected()){
-                                                               maxtime = tograph.get(0);
-                           	xAxis.setUpperBound(bar.getMax() * (maxtime)/100+100);
-                           	xAxis.setLowerBound(bar.getMax() * (maxtime)/100-800);
-                       	}
-                       	else{
-                        	xAxis.setUpperBound(bar.getValue() * (maxtime)/100+100);
-                       	xAxis.setLowerBound(bar.getValue() * (maxtime)/100-800);
-                       	}     
+                        	}                          
+                                for(int i = 1; i<tograph.size(); i++){
+                                    if(tograph.get(1) > maxy){
+                                        maxy = tograph.get(1);
+                                    }
+                                }                                    
+                                yAxis.setUpperBound((100-vert.getValue()) * (maxy)/100+100);
+                           	yAxis.setLowerBound((100-vert.getValue()) * (maxy)/100-900);                       
+                                if(toggle.isSelected()){
+                                    if(tograph.get(0)>maxx){
+                                        maxx = tograph.get(0);
+                                    }
+                           	xAxis.setUpperBound(bar.getMax() * (maxx)/100+100);
+                           	xAxis.setLowerBound(bar.getMax() * (maxx)/100-800);
+                                }
+                                else{
+                                    xAxis.setUpperBound(bar.getValue() * (maxx)/100+100);
+                                    xAxis.setLowerBound(bar.getValue() * (maxx)/100-800);
+                                }  
+                                                               }
                        	}catch(IndexOutOfBoundsException e){}
                        	}
                     	});
@@ -183,9 +207,6 @@ height = height*4/5;
   	chart.setPrefHeight(height);
   }
 
-	public void stopgraph(){
-            
-	}
 public void save() {
 	WritableImage image = chart.snapshot(new SnapshotParameters(), null);
 
@@ -204,4 +225,4 @@ public void save() {
         }
 }
   
-	}
+}
