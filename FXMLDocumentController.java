@@ -53,6 +53,7 @@ Button close;
 public int test = 0;
 Integer width = 800;
 Integer height = 500;
+int numinputs = 1;
 String port = new String();
 SerialPort serialPort;
  XYChart.Series<Number, Number>[] series = Stream.<XYChart.Series<Number, Number>>generate(XYChart.Series::new).limit(16).toArray(XYChart.Series[]::new);
@@ -93,10 +94,12 @@ public void open(){
     	System.out.println(ex);
 	}
     	try{
-    	for(int i=0; i<15; i++){
-    	if(check.get(i).isSelected())
+            numinputs = 1;
+    	for(int i=0; i<16; i++){
+    	if(check.get(i).isSelected()){
     	chart.getData().add(series[i]);
-    	else{
+        numinputs++;
+        }else{
         	chart.getData().remove(series[i]);
     	}
 	}
@@ -146,9 +149,9 @@ while(1==1){
                         	@Override public void run() {
                                     System.out.println(tograph);
                                 try{
-                                                               if(tograph.size()==17){
+                                                               if(tograph.size()==numinputs){
                                                                bs.append(tograph + System.getProperty("line.separator"));//DEBUGGING NEEDED
-                        	for(int i=1; i<17; i++){
+                        	for(int i=1; i<numinputs; i++){
                                 series[i-1].getData().add(new XYChart.Data(tograph.get(0), tograph.get(i)));     
                         	}                          
                                 for(int i = 1; i<tograph.size(); i++){
